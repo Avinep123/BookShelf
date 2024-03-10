@@ -51,11 +51,20 @@ def remove_from_cart(request, book_id):
 @login_required
 def update_quantity(request, book_id):
     if request.method == 'POST':
-        quantity = int(request.POST.get('quantity', 1))
+        try:
+            quantity = int(request.POST.get('quantity', 1))
+            
+            # Ensure quantity is non-negative
+            if quantity < 1:
+                quantity = 1
 
-        cart = request.session.get('cart', {})
-        if str(book_id) in cart:
-            cart[str(book_id)]['quantity'] = quantity
-            request.session['cart'] = cart
+            cart = request.session.get('cart', {})
+            if str(book_id) in cart:
+                cart[str(book_id)]['quantity'] = quantity
+                request.session['cart'] = cart
+
+        except ValueError:
+            # Handle the case where the quantity is not a valid integer
+            pass
 
     return redirect('view_cart')

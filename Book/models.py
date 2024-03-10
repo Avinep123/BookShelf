@@ -34,8 +34,6 @@ class Book(models.Model):
     def __str__(self):
         return self.title
     
-
-
     def calculate_average_rating(self):
         ratings_data = self.rated_products.aggregate(
             total_ratings=models.Avg('rating_no'),
@@ -47,6 +45,8 @@ class Book(models.Model):
         self.average_rating = total_ratings if total_ratings is not None else 0
         self.ratings_count = count
         self.save()
+
+      
 
 class MyRating(models.Model):
     user = models.ForeignKey(User, related_name='ratings', on_delete=models.CASCADE)
